@@ -9,6 +9,11 @@ const { height, width } = Dimensions.get('window');
 const totalSize = num => (Math.sqrt((height * height) + (width * width)) * num) / 100;
 
 export default class Chat extends React.Component {
+  static defaultProps = {
+    entranceAnimation: 'fadeInRightBig',
+    exitAnimation: 'fadeOutRightBig',
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -90,7 +95,7 @@ export default class Chat extends React.Component {
   };
 
   closeChat = () => {
-    this.chat.lightSpeedOut(500).then(() => {
+    this.chat[this.props.exitAnimation](300).then(() => {
       this.props.closeChat();
     });
   };
@@ -112,7 +117,8 @@ export default class Chat extends React.Component {
     if (this.props.isChatOn) {
       return (
         <View
-          animation="lightSpeedIn"
+          animation={this.props.entranceAnimation}
+          duration={300}
           style={styles.container}
           ref={(ref) => { this.chat = ref; }}
         >
@@ -145,6 +151,8 @@ Chat.propTypes = {
   greeting: PropTypes.string.isRequired,
   noAgents: PropTypes.string.isRequired,
   returnChatId: PropTypes.func.isRequired,
+  entranceAnimation: PropTypes.string,
+  exitAnimation: PropTypes.string,
 };
 
 const styles = StyleSheet.create({
